@@ -1,0 +1,7 @@
+type Dumpster @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  location: String
+  dateDropOff: AWSDateTime
+  datePickedUp: AWSDateTime
+}

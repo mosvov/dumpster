@@ -1,95 +1,46 @@
-# React Admin Amplify Demo
+# Getting Started with Create React App
 
-This project aims to demonstrate the use of [React Admin Amplify](https://github.com/MrHertal/react-admin-amplify).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-The demo is accessible here: <https://master.d3os44oci7szj2.amplifyapp.com>.
+## Available Scripts
 
-Feel free to play with it!
+In the project directory, you can run:
 
-## About React Admin Amplify
+### `npm start`
 
-[React Admin Amplify](https://github.com/MrHertal/react-admin-amplify) is a module that connects a react-admin frontend to an Amplify backend.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-It includes the data and auth providers, but also some components that make things easier to set up.
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-## About this demo
+### `npm test`
 
-The schema used in this demo is a variant of the [schema with 17 patterns related to relational designs](https://docs.amplify.aws/cli/graphql-transformer/dataaccess).
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## How to clone this project
+### `npm run build`
 
-If you want to use this project as a bootstrap. Follow these steps:
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-```sh
-git clone https://github.com/MrHertal/react-admin-amplify-demo.git && cd react-admin-amplify-demo
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-Install dependencies:
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-```sh
-yarn
-```
+### `npm run eject`
 
-Init Amplify project:
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-```sh
-amplify init
-```
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Push project to the cloud:
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-```sh
-amplify push
-```
-
-Do not retrieve demo user avatar and remove the custom login page:
-
-```jsx
-// in App.js
-
-// Get the demo user avatar
-// authProvider.getIdentity = async () => {
-//   try {
-//     const userData = await API.graphql(
-//       graphqlOperation(queries.getUser, { id: "demo" })
-//     );
-
-//     const url = await Storage.get(userData.data.getUser.picture.key);
-
-//     return {
-//       id: "demo",
-//       fullName: "Demo",
-//       avatar: url,
-//     };
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
-
-function App() {
-  return (
-    <Admin
-      authProvider={authProvider}
-      dataProvider={dataProvider}
-      // loginPage={LoginPage}
-      dashboard={Dashboard}
-    ></Admin>
-  );
-}
-```
-
-Create a user using the cognito console for example. If you want to change the status `FORCE_CHANGE_PASSWORD` of your newly created user, use the AWS cli as explained [here](https://stackoverflow.com/a/56948249/4140356).
-
-Finally, add the user to the `admin` group.
-
-Start the project:
-
-```sh
-yarn start
-```
-
-You should be able to login with your user.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
 ## Learn More
 
-See [react-admin](https://marmelab.com/react-admin/Readme.html) and [Amplify](https://docs.amplify.aws).
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
