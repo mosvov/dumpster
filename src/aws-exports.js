@@ -35,20 +35,7 @@ const awsmobile = {
     "aws_appsync_graphqlEndpoint": "https://wywcidr7gjaypodtqbgaxwpxfa.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "API_KEY",
-    "aws_appsync_apiKey": "da2-yvvkebwk2jax7o26ixnw5sc2rq",
-    "geo": {
-        "amazon_location_service": {
-            "region": "us-east-1",
-            "maps": {
-                "items": {
-                    "dumpstersMap-dev": {
-                        "style": "VectorEsriStreets"
-                    }
-                },
-                "default": "dumpstersMap-dev"
-            }
-        }
-    }
+    "aws_appsync_apiKey": "da2-yvvkebwk2jax7o26ixnw5sc2rq"
 };
 
 

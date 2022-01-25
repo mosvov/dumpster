@@ -61,13 +61,5 @@
       }
     }
   },
-  "geo": {
-    "dumpstersMap": {
-      "isDefault": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Map",
-      "mapStyle": "VectorEsriStreets",
-      "accessType": "AuthorizedAndGuestUsers"
-    }
-  }
+  "geo": {}
 }
