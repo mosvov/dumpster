@@ -61,6 +61,20 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type Dumpster = {
+  __typename: "Dumpster",
+  id?: string,
+  name?: string | null,
+  location?: string | null,
+  dateDropOff?: string | null,
+  datePickedUp?: string | null,
+  _version?: number,
+  _deleted?: boolean | null,
+  _lastChangedAt?: number,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
 export type UpdateDumpsterInput = {
   id: string,
   name?: string | null,
@@ -71,7 +85,7 @@ export type UpdateDumpsterInput = {
 };
 
 export type DeleteDumpsterInput = {
-  id?: string | null,
+  id: string,
   _version?: number | null,
 };
 
@@ -102,60 +116,120 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelDumpsterConnection = {
+  __typename: "ModelDumpsterConnection",
+  items?:  Array<Dumpster | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
 export type CreateDumpsterMutationVariables = {
-  input: CreateDumpsterInput,
+  input?: CreateDumpsterInput,
   condition?: ModelDumpsterConditionInput | null,
 };
 
 export type CreateDumpsterMutation = {
-  createDumpster:  {
+  createDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
 export type UpdateDumpsterMutationVariables = {
-  input: UpdateDumpsterInput,
+  input?: UpdateDumpsterInput,
   condition?: ModelDumpsterConditionInput | null,
 };
 
 export type UpdateDumpsterMutation = {
-  updateDumpster:  {
+  updateDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
 export type DeleteDumpsterMutationVariables = {
-  input: DeleteDumpsterInput,
+  input?: DeleteDumpsterInput,
   condition?: ModelDumpsterConditionInput | null,
 };
 
 export type DeleteDumpsterMutation = {
-  deleteDumpster:  {
+  deleteDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type GetDumpsterQueryVariables = {
+  id?: string,
+};
+
+export type GetDumpsterQuery = {
+  getDumpster?:  {
+    __typename: "Dumpster",
+    id: string,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListDumpstersQueryVariables = {
+  filter?: ModelDumpsterFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListDumpstersQuery = {
+  listDumpsters?:  {
+    __typename: "ModelDumpsterConnection",
+    items:  Array< {
+      __typename: "Dumpster",
+      id: string,
+      name?: string | null,
+      location?: string | null,
+      dateDropOff?: string | null,
+      datePickedUp?: string | null,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -167,105 +241,70 @@ export type SyncDumpstersQueryVariables = {
 };
 
 export type SyncDumpstersQuery = {
-  syncDumpsters:  {
+  syncDumpsters?:  {
     __typename: "ModelDumpsterConnection",
     items:  Array< {
       __typename: "Dumpster",
       id: string,
-      name: string | null,
-      location: string | null,
-      dateDropOff: string | null,
-      datePickedUp: string | null,
+      name?: string | null,
+      location?: string | null,
+      dateDropOff?: string | null,
+      datePickedUp?: string | null,
       _version: number,
-      _deleted: boolean | null,
+      _deleted?: boolean | null,
       _lastChangedAt: number,
-    } | null > | null,
-    nextToken: string | null,
-    startedAt: number | null,
-  } | null,
-};
-
-export type GetDumpsterQueryVariables = {
-  id: string,
-};
-
-export type GetDumpsterQuery = {
-  getDumpster:  {
-    __typename: "Dumpster",
-    id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
-    _version: number,
-    _deleted: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type ListDumpstersQueryVariables = {
-  filter?: ModelDumpsterFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListDumpstersQuery = {
-  listDumpsters:  {
-    __typename: "ModelDumpsterConnection",
-    items:  Array< {
-      __typename: "Dumpster",
-      id: string,
-      name: string | null,
-      location: string | null,
-      dateDropOff: string | null,
-      datePickedUp: string | null,
-      _version: number,
-      _deleted: boolean | null,
-      _lastChangedAt: number,
-    } | null > | null,
-    nextToken: string | null,
-    startedAt: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
 export type OnCreateDumpsterSubscription = {
-  onCreateDumpster:  {
+  onCreateDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
 export type OnUpdateDumpsterSubscription = {
-  onUpdateDumpster:  {
+  onUpdateDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
 export type OnDeleteDumpsterSubscription = {
-  onDeleteDumpster:  {
+  onDeleteDumpster?:  {
     __typename: "Dumpster",
     id: string,
-    name: string | null,
-    location: string | null,
-    dateDropOff: string | null,
-    datePickedUp: string | null,
+    name?: string | null,
+    location?: string | null,
+    dateDropOff?: string | null,
+    datePickedUp?: string | null,
     _version: number,
-    _deleted: boolean | null,
+    _deleted?: boolean | null,
     _lastChangedAt: number,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };

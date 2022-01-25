@@ -10,6 +10,9 @@ export const getDumpster = /* GraphQL */ `
       location
       dateDropOff
       datePickedUp
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
@@ -28,10 +31,44 @@ export const listDumpsters = /* GraphQL */ `
         location
         dateDropOff
         datePickedUp
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncDumpsters = /* GraphQL */ `
+  query SyncDumpsters(
+    $filter: ModelDumpsterFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncDumpsters(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        location
+        dateDropOff
+        datePickedUp
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;

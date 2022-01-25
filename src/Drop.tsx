@@ -5,8 +5,6 @@ import { Marker } from "@react-google-maps/api";
 import { DataStore } from "@aws-amplify/datastore";
 import { Dumpster } from "./models";
 
-const googleMapsApiKey = "AIzaSyAVDzrNj6jDQTj0-axpm7UK6hcQXQpZ5EY";
-
 const containerStyle = {
   width: "400px",
   height: "400px",
@@ -20,7 +18,7 @@ const center = {
 function MyComponent() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
   });
 
   const [location, setLocation] = useState<google.maps.LatLng | null>(null);
@@ -48,9 +46,10 @@ function MyComponent() {
     const name =
       streetAddress?.address_components.find((a) =>
         a.types.includes("street_number")
-      ) +
+      )?.short_name +
       " " +
-      streetAddress?.address_components.find((a) => a.types.includes("route"));
+      streetAddress?.address_components.find((a) => a.types.includes("route"))
+        ?.short_name;
 
     console.log(response);
 
@@ -60,7 +59,7 @@ function MyComponent() {
         location: streetAddress?.formatted_address,
         dateDropOff: new Date().toISOString(),
       })
-    );
+    ).catch((e) => console.error(e));
 
     console.log("dumpster", dumpster);
   };

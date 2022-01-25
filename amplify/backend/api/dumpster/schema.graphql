@@ -5,3 +5,4 @@ type Dumpster @model @auth(rules: [{ allow: public }]) {
   dateDropOff: AWSDateTime
   datePickedUp: AWSDateTime
 }
+ 
