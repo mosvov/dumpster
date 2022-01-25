@@ -1,4 +1,5 @@
-// tslint:disable
+/* tslint:disable */
+/* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
 export const createDumpster = /* GraphQL */ `
@@ -12,9 +13,8 @@ export const createDumpster = /* GraphQL */ `
       location
       dateDropOff
       datePickedUp
-      _version
-      _deleted
-      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -29,9 +29,8 @@ export const updateDumpster = /* GraphQL */ `
       location
       dateDropOff
       datePickedUp
-      _version
-      _deleted
-      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -46,9 +45,8 @@ export const deleteDumpster = /* GraphQL */ `
       location
       dateDropOff
       datePickedUp
-      _version
-      _deleted
-      _lastChangedAt
+      createdAt
+      updatedAt
     }
   }
 `;

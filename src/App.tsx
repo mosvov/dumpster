@@ -8,6 +8,7 @@ import { Amplify } from "@aws-amplify/core";
 import * as mutations from "./graphql/mutations";
 import * as queries from "./graphql/queries";
 import awsExports from "./aws-exports";
+import Map from "./Map";
 
 import {
   DumpsterList,
@@ -16,6 +17,8 @@ import {
   DumpsterShow,
   DumpsterIcon,
 } from "./models/dumpster";
+import { Route, Routes } from "react-router-dom";
+import Drop from "./Drop";
 
 Amplify.configure(awsExports);
 
