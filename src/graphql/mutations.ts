@@ -11,8 +11,9 @@ export const createDumpster = /* GraphQL */ `
       id
       name
       location
-      dateDropOff
+      comments
       datePickedUp
+      dateDropOff
       _version
       _deleted
       _lastChangedAt
@@ -30,8 +31,9 @@ export const updateDumpster = /* GraphQL */ `
       id
       name
       location
-      dateDropOff
+      comments
       datePickedUp
+      dateDropOff
       _version
       _deleted
       _lastChangedAt
@@ -49,8 +51,9 @@ export const deleteDumpster = /* GraphQL */ `
       id
       name
       location
-      dateDropOff
+      comments
       datePickedUp
+      dateDropOff
       _version
       _deleted
       _lastChangedAt

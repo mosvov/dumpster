@@ -8,8 +8,9 @@ export const getDumpster = /* GraphQL */ `
       id
       name
       location
-      dateDropOff
+      comments
       datePickedUp
+      dateDropOff
       _version
       _deleted
       _lastChangedAt
@@ -29,8 +30,9 @@ export const listDumpsters = /* GraphQL */ `
         id
         name
         location
-        dateDropOff
+        comments
         datePickedUp
+        dateDropOff
         _version
         _deleted
         _lastChangedAt
@@ -59,8 +61,9 @@ export const syncDumpsters = /* GraphQL */ `
         id
         name
         location
-        dateDropOff
+        comments
         datePickedUp
+        dateDropOff
         _version
         _deleted
         _lastChangedAt

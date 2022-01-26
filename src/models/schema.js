@@ -24,15 +24,22 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "dateDropOff": {
-                    "name": "dateDropOff",
+                "comments": {
+                    "name": "comments",
                     "isArray": false,
-                    "type": "AWSDateTime",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
                 "datePickedUp": {
                     "name": "datePickedUp",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dateDropOff": {
+                    "name": "dateDropOff",
                     "isArray": false,
                     "type": "AWSDateTime",
                     "isRequired": false,
@@ -67,5 +74,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "b4c21bf1c4d3b054ed32a8dfdc06ac64"
+    "version": "c48bff399bd0cc94cd94da70f06f7ed1"
 };
