@@ -13,3 +13,10 @@ body {
   text-decoration: none;
   display: inline-block;
 }
+.button.buttonRed {
+  background-color: #af4c4c;
+}
+.button:disabled {
+  background-color: #727272ff;
+  color: grey;
+}

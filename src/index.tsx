@@ -4,8 +4,11 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Map from "./Map";
 import Drop from "./Drop";
+import { Amplify } from "@aws-amplify/core";
+import awsExports from "./aws-exports";
+
+Amplify.configure(awsExports);
 
 ReactDOM.render(
   <React.StrictMode>

@@ -5,9 +5,12 @@ import { Marker } from "@react-google-maps/api";
 import { DataStore } from "@aws-amplify/datastore";
 import { Dumpster } from "./models";
 import { useParams } from "react-router-dom";
+import { Hub } from "@aws-amplify/core";
+import CachedIcon from "@material-ui/icons/Cached";
 
 const containerStyle = {
-  width: "400px",
+  width: "100%",
+  maxWidth: "500px",
   height: "400px",
   margin: "0 auto",
 };
@@ -20,17 +23,38 @@ function MyComponent() {
   const formRef = useRef<HTMLFormElement>(null);
 
   let { id } = useParams();
-  const [location, setLocation] = useState<google.maps.LatLng | null>(null);
-  const [map, setMap] = useState(null);
+  //const [location, setLocation] = useState<google.maps.LatLng | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [dumpster, setDumpster] = useState<Dumpster>();
 
   useEffect(() => {
-    DataStore.query(Dumpster, id!).then((d) => setDumpster(d));
-  }, []);
+    const removeListener = Hub.listen("datastore", async ({ payload }) => {
+      if (payload.event === "ready") {
+        console.log("DataStore ready");
+        DataStore.query(Dumpster, id!)
+          .then((d) => setDumpster(d))
+          .then(setMapCenter)
+          .catch((e) => console.error(e));
+      }
+    });
 
-  const onLoad = useCallback((map) => {
-    const bounds = new window.google.maps.LatLngBounds();
+    DataStore.start();
+
+    return () => removeListener();
+  }, [id]);
+
+  const setMapCenter = () => {
+    if (!map || !dumpster) return;
+    const bounds = new window.google.maps.LatLngBounds(
+      dumpster!.latLng as any,
+      dumpster!.latLng as any
+    );
     map.fitBounds(bounds);
+  };
+
+  const onLoad = useCallback((map: google.maps.Map) => {
+    setMapCenter();
+
     setMap(map);
   }, []);
 
@@ -39,10 +63,8 @@ function MyComponent() {
   }, []);
 
   const drop = async () => {
-    const geocoder = new google.maps.Geocoder();
-
+    /*const geocoder = new google.maps.Geocoder();
     const response = await geocoder.geocode({ location });
-
     const streetAddress = response.results.find((r) =>
       r.types.includes("street_address")
     );
@@ -53,48 +75,70 @@ function MyComponent() {
       )?.short_name +
       " " +
       streetAddress?.address_components.find((a) => a.types.includes("route"))
-        ?.short_name;
+        ?.short_name;*/
 
-    console.log(response);
+    if (!dumpster) return;
 
-    const dumpster = await DataStore.save(
-      new Dumpster({
-        name,
-        location: streetAddress?.formatted_address,
-        dateDropOff: new Date().toISOString(),
+    await DataStore.save(
+      Dumpster.copyOf(dumpster, (item) => {
+        item.dateDropOff = new Date().toISOString();
       })
-    ).catch((e) => console.error(e));
+    )
+      .then((d) => setDumpster(d))
+      .catch((e) => console.error(e));
+  };
 
-    console.log("dumpster", dumpster);
+  const pickUp = async () => {
+    if (!dumpster) return;
+
+    await DataStore.save(
+      Dumpster.copyOf(dumpster, (item) => {
+        item.datePickedUp = new Date().toISOString();
+      })
+    )
+      .then((d) => setDumpster(d))
+      .catch((e) => console.error(e));
   };
 
   const onDragEnd = (e: google.maps.MapMouseEvent) => {
-    setLocation(e.latLng);
+    //setLocation(e.latLng);
   };
 
+  console.log("dd", dumpster?.dateDropOff, dumpster?.datePickedUp);
   return isLoaded && dumpster ? (
     <div style={{ textAlign: "center" }}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={dumpster!.latLng as any}
-        zoom={14}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-      >
-        <Marker
-          position={dumpster!.latLng as any}
-          onDragEnd={onDragEnd}
-          draggable={false}
-        />
-      </GoogleMap>
-
-      <h3 style={{ color: "white" }}>{dumpster!.location}</h3>
+      {dumpster?.latLng && (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={dumpster!.latLng as any}
+          zoom={14}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+        >
+          <Marker
+            position={dumpster!.latLng as any}
+            onDragEnd={onDragEnd}
+            draggable={false}
+          />
+        </GoogleMap>
+      )}
+      <h3 style={{ color: "white" }}>{dumpster.location}</h3>
+      <pre style={{ color: "white" }}>{dumpster.comments}</pre>
       <button
+        style={{ marginRight: 10 }}
         disabled={!!dumpster.dateDropOff}
-        className="button"
-        onClick={drop}
+        className="button buttonRed"
+        onClick={() => window.confirm("Are you sure?") && drop()}
       >
-        Drop
+        Drop UP
+      </button>
+
+      <button
+        disabled={!dumpster.dateDropOff || !!dumpster.datePickedUp}
+        className="button"
+        onClick={() => window.confirm("Are you sure?") && pickUp()}
+      >
+        Pick UP
       </button>
 
       <form
@@ -112,7 +156,9 @@ function MyComponent() {
       </form>
     </div>
   ) : (
-    <></>
+    <>
+      <CachedIcon />
+    </>
   );
 }
 

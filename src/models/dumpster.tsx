@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   List,
   Datagrid,
@@ -16,25 +16,21 @@ import {
   Show,
   SimpleShowLayout,
   required,
-  FormDataConsumer,
-  Labeled,
   FunctionField,
 } from "react-admin";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import { useForm } from "react-final-form";
-import { Field } from "react-final-form";
 
 import BookIcon from "@material-ui/icons/Book";
 import { Dumpster } from "./index";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
+
 export const DumpsterIcon = BookIcon;
 
 export const DumpsterList = (props: any) => (
   <List {...props}>
     <Datagrid rowClick="show">
-      <TextField source="name" />
       <TextField source="location" />
-      <DateField source="createdAt" />
       <DateField source="dateDropOff" />
       <DateField source="datePickedUp" />
       <EditButton basePath="/Dumpsters" />
@@ -42,14 +38,15 @@ export const DumpsterList = (props: any) => (
   </List>
 );
 
-const DumpsterTitle = ({ record }: { record?: Dumpster }) => {
-  return <span>Dumpster {record ? `"${record.name}"` : ""}</span>;
+const DumpsterTitle = () => {
+  return <span>Dumpster</span>;
 };
 
-const DumpsterEditActions = ({ basePath, data }: any) => (
+const DumpsterActions = ({ basePath, data }: any) => (
   <TopToolbar>
     <ListButton basePath={basePath} label="Back" icon={<ChevronLeft />} />
     <ShowButton basePath={basePath} record={data} />
+    <EditButton basePath={basePath} record={data} />
   </TopToolbar>
 );
 export const DumpsterEdit = (props: any) => {
@@ -60,14 +57,10 @@ export const DumpsterEdit = (props: any) => {
   });
 
   return (
-    <Edit
-      title={<DumpsterTitle />}
-      actions={<DumpsterEditActions />}
-      {...props}
-    >
+    <Edit title={<DumpsterTitle />} actions={<DumpsterActions />} {...props}>
       <SimpleForm>
         <TextInput disabled source="id" />
-        {isLoaded && <AdressAutoComplete />}
+        {isLoaded && <AddressAutoComplete />}
         <TextInput source="comments" rows={2} multiline resettable />
         <DateTimeInput source="dateDropOff" resettable />
         <DateTimeInput source="datePickedUp" resettable />
@@ -86,11 +79,11 @@ export const DumpsterCreate = (props: any) => {
   return (
     <Create
       title="Create a Dumpster drop off request"
-      actions={<DumpsterEditActions />}
+      actions={<DumpsterActions />}
       {...props}
     >
       <SimpleForm variant="filled" redirect="show">
-        {isLoaded && <AdressAutoComplete />}
+        {isLoaded && <AddressAutoComplete />}
 
         <TextInput source="comments" rows={2} multiline resettable />
       </SimpleForm>
@@ -98,7 +91,7 @@ export const DumpsterCreate = (props: any) => {
   );
 };
 
-const AdressAutoComplete = () => {
+const AddressAutoComplete = () => {
   const form = useForm();
   const [autocomplete, setAutocomplete] =
     useState<google.maps.places.Autocomplete>();
@@ -126,14 +119,14 @@ const AdressAutoComplete = () => {
 };
 
 export const DumpsterShow = (props: any) => (
-  <Show {...props}>
+  <Show title={<DumpsterTitle />} actions={<DumpsterActions />} {...props}>
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="location" />
       <TextField source="comments" />
-      <DateField source="createdAt" />
-      <DateField source="dateDropOff" />
-      <DateField source="datePickedUp" />
+      <DateField source="createdAt" showTime />
+      <DateField source="dateDropOff" showTime />
+      <DateField source="datePickedUp" showTime />
       <FunctionField<Dumpster>
         label="Share"
         render={(d?: Dumpster) => (
