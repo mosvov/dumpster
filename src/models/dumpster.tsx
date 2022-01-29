@@ -18,6 +18,7 @@ import {
   required,
   FormDataConsumer,
   Labeled,
+  FunctionField,
 } from "react-admin";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import { useForm } from "react-final-form";
@@ -33,6 +34,7 @@ export const DumpsterList = (props: any) => (
     <Datagrid rowClick="show">
       <TextField source="name" />
       <TextField source="location" />
+      <DateField source="createdAt" />
       <DateField source="dateDropOff" />
       <DateField source="datePickedUp" />
       <EditButton basePath="/Dumpsters" />
@@ -50,17 +52,29 @@ const DumpsterEditActions = ({ basePath, data }: any) => (
     <ShowButton basePath={basePath} record={data} />
   </TopToolbar>
 );
-export const DumpsterEdit = (props: any) => (
-  <Edit title={<DumpsterTitle />} actions={<DumpsterEditActions />} {...props}>
-    <SimpleForm>
-      <TextInput disabled source="id" />
-      <TextInput source="name" />
-      <TextInput source="location" />
-      <DateTimeInput source="dateDropOff" />
-      <DateTimeInput source="datePickedUp" />
-    </SimpleForm>
-  </Edit>
-);
+export const DumpsterEdit = (props: any) => {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+    libraries: ["places"],
+  });
+
+  return (
+    <Edit
+      title={<DumpsterTitle />}
+      actions={<DumpsterEditActions />}
+      {...props}
+    >
+      <SimpleForm>
+        <TextInput disabled source="id" />
+        {isLoaded && <AdressAutoComplete />}
+        <TextInput source="comments" rows={2} multiline resettable />
+        <DateTimeInput source="dateDropOff" resettable />
+        <DateTimeInput source="datePickedUp" resettable />
+      </SimpleForm>
+    </Edit>
+  );
+};
 
 export const DumpsterCreate = (props: any) => {
   const { isLoaded } = useJsApiLoader({
@@ -90,17 +104,24 @@ const AdressAutoComplete = () => {
     useState<google.maps.places.Autocomplete>();
 
   const onLoad = (a: google.maps.places.Autocomplete) => setAutocomplete(a);
-  const onPlaceChanged = () =>
+  const onPlaceChanged = () => {
     form.change("location", autocomplete?.getPlace()?.formatted_address);
 
+    const latLng = autocomplete?.getPlace()?.geometry?.location?.toJSON();
+    form.change("latLng", JSON.stringify(latLng));
+  };
+
   return (
-    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-      <TextInput
-        style={{ width: 256 }}
-        source="location"
-        validate={required()}
-      />
-    </Autocomplete>
+    <>
+      <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+        <TextInput
+          style={{ width: 256 }}
+          source="location"
+          validate={required()}
+        />
+      </Autocomplete>
+      <TextInput style={{ display: "none" }} source="latLng" />
+    </>
   );
 };
 
@@ -108,12 +129,17 @@ export const DumpsterShow = (props: any) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="id" />
-
       <TextField source="location" />
       <TextField source="comments" />
-
+      <DateField source="createdAt" />
       <DateField source="dateDropOff" />
       <DateField source="datePickedUp" />
+      <FunctionField<Dumpster>
+        label="Share"
+        render={(d?: Dumpster) => (
+          <a href={`/drop/${d?.id}`}>Link to drop page</a>
+        )}
+      />
     </SimpleShowLayout>
   </Show>
 );

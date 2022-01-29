@@ -1,18 +1,15 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 import { Marker } from "@react-google-maps/api";
 import { DataStore } from "@aws-amplify/datastore";
 import { Dumpster } from "./models";
+import { useParams } from "react-router-dom";
 
 const containerStyle = {
   width: "400px",
   height: "400px",
-};
-
-const center = {
-  lat: 30.336944,
-  lng: -81.661389,
+  margin: "0 auto",
 };
 
 function MyComponent() {
@@ -20,9 +17,16 @@ function MyComponent() {
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
   });
+  const formRef = useRef<HTMLFormElement>(null);
 
+  let { id } = useParams();
   const [location, setLocation] = useState<google.maps.LatLng | null>(null);
   const [map, setMap] = useState(null);
+  const [dumpster, setDumpster] = useState<Dumpster>();
+
+  useEffect(() => {
+    DataStore.query(Dumpster, id!).then((d) => setDumpster(d));
+  }, []);
 
   const onLoad = useCallback((map) => {
     const bounds = new window.google.maps.LatLngBounds();
@@ -65,31 +69,47 @@ function MyComponent() {
   };
 
   const onDragEnd = (e: google.maps.MapMouseEvent) => {
-    console.log("donDragEndd", e.latLng?.toUrlValue());
     setLocation(e.latLng);
   };
 
-  return isLoaded ? (
-    <div>
+  return isLoaded && dumpster ? (
+    <div style={{ textAlign: "center" }}>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={center}
-        zoom={12}
+        center={dumpster!.latLng as any}
+        zoom={14}
         onLoad={onLoad}
         onUnmount={onUnmount}
       >
         <Marker
-          position={{
-            lat: location?.lat() || 30.336944,
-            lng: location?.lng() || -81.661389,
-          }}
+          position={dumpster!.latLng as any}
           onDragEnd={onDragEnd}
-          draggable={true}
+          draggable={false}
         />
       </GoogleMap>
-      <button disabled={!location} className="btn btn-2" onClick={drop}>
+
+      <h3 style={{ color: "white" }}>{dumpster!.location}</h3>
+      <button
+        disabled={!!dumpster.dateDropOff}
+        className="button"
+        onClick={drop}
+      >
         Drop
       </button>
+
+      <form
+        style={{ marginTop: "20px" }}
+        action="http://maps.google.com/maps"
+        method="get"
+        target="_blank"
+        ref={formRef}
+      >
+        <input type="hidden" name="daddr" value={dumpster!.location} />
+
+        <button type="submit" className="button">
+          Get directions
+        </button>
+      </form>
     </div>
   ) : (
     <></>

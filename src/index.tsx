@@ -12,8 +12,8 @@ ReactDOM.render(
     <div className="container">
       <BrowserRouter>
         <Routes>
-          <Route path="/map" element={<Map />} />
-          <Route path="/drop" element={<Drop />} />
+          {/* <Route path="/map" element={<Map />} />*/}
+          <Route path="/drop/:id" element={<Drop />} />
           <Route path="/*" element={<App />} />
         </Routes>
       </BrowserRouter>

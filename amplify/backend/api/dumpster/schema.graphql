@@ -2,8 +2,9 @@ type Dumpster @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   location: String
-  comments: String
+  latLng: AWSJSON
   datePickedUp: AWSDateTime
   dateDropOff: AWSDateTime
+  comments: String
 }
  

@@ -24,10 +24,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "comments": {
-                    "name": "comments",
+                "latLng": {
+                    "name": "latLng",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSJSON",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -42,6 +42,13 @@ export const schema = {
                     "name": "dateDropOff",
                     "isArray": false,
                     "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comments": {
+                    "name": "comments",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -74,5 +81,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "c48bff399bd0cc94cd94da70f06f7ed1"
+    "version": "7576dc5de60744fff8d526b48d7bf7f3"
 };
