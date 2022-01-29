@@ -17,6 +17,7 @@ import {
   SimpleShowLayout,
   required,
   FunctionField,
+  DeleteButton,
 } from "react-admin";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import { useForm } from "react-final-form";
@@ -24,19 +25,54 @@ import { useForm } from "react-final-form";
 import BookIcon from "@material-ui/icons/Book";
 import { Dumpster } from "./index";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
+import { Record } from "ra-core";
 
 export const DumpsterIcon = BookIcon;
 
-export const DumpsterList = (props: any) => (
-  <List {...props}>
-    <Datagrid rowClick="show">
-      <TextField source="location" />
-      <DateField source="dateDropOff" />
-      <DateField source="datePickedUp" />
-      <EditButton basePath="/Dumpsters" />
-    </Datagrid>
-  </List>
-);
+export const DumpsterList = (props: any) => {
+  const postRowStyle = (d: Record) => {
+    let backgroundColor = "white";
+
+    if (!d.dateDropOff) {
+      return {
+        backgroundColor,
+      };
+    }
+    const today = new Date();
+
+    if (
+      new Date(d.dateDropOff) <
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 25)
+    ) {
+      backgroundColor = "#AFA74CFF";
+    }
+    if (
+      new Date(d.dateDropOff) <
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30)
+    ) {
+      backgroundColor = "#af4c4c";
+    }
+
+    if (d.datePickedUp) {
+      backgroundColor = "#4caf50";
+    }
+
+    return {
+      backgroundColor,
+    };
+  };
+
+  return (
+    <List {...props}>
+      <Datagrid rowClick="show" rowStyle={postRowStyle}>
+        <TextField source="location" />
+        <DateField source="dateDropOff" />
+        <DateField source="datePickedUp" />
+        <EditButton basePath="/Dumpsters" />
+      </Datagrid>
+    </List>
+  );
+};
 
 const DumpsterTitle = () => {
   return <span>Dumpster</span>;
@@ -44,9 +80,10 @@ const DumpsterTitle = () => {
 
 const DumpsterActions = ({ basePath, data }: any) => (
   <TopToolbar>
-    <ListButton basePath={basePath} label="Back" icon={<ChevronLeft />} />
+    <ListButton basePath={basePath} record={data} />
     <ShowButton basePath={basePath} record={data} />
     <EditButton basePath={basePath} record={data} />
+    <DeleteButton basePath={basePath} record={data} />
   </TopToolbar>
 );
 export const DumpsterEdit = (props: any) => {
