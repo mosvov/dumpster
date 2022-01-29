@@ -23,7 +23,7 @@ function MyComponent() {
   const formRef = useRef<HTMLFormElement>(null);
 
   let { id } = useParams();
-  //const [location, setLocation] = useState<google.maps.LatLng | null>(null);
+  //const [location, setLocation] = useState<google.maps.LatLng |  null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [dumpster, setDumpster] = useState<Dumpster>();
 
