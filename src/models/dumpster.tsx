@@ -19,7 +19,6 @@ import {
   FunctionField,
   DeleteButton,
 } from "react-admin";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import { useForm } from "react-final-form";
 
 import BookIcon from "@material-ui/icons/Book";
