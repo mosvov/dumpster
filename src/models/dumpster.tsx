@@ -18,52 +18,22 @@ import {
   required,
   FunctionField,
   DeleteButton,
+  Button,
 } from "react-admin";
 import { useForm } from "react-final-form";
-
+import ShareIcon from "@material-ui/icons/Share";
 import BookIcon from "@material-ui/icons/Book";
 import { Dumpster } from "./index";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { Record } from "ra-core";
+import { useHistory } from "react-router-dom";
 
 export const DumpsterIcon = BookIcon;
 
 export const DumpsterList = (props: any) => {
-  const postRowStyle = (d: Record) => {
-    let backgroundColor = "white";
-
-    if (!d.dateDropOff) {
-      return {
-        backgroundColor,
-      };
-    }
-    const today = new Date();
-
-    if (
-      new Date(d.dateDropOff) <
-      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 25)
-    ) {
-      backgroundColor = "#AFA74CFF";
-    }
-    if (
-      new Date(d.dateDropOff) <
-      new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30)
-    ) {
-      backgroundColor = "#af4c4c";
-    }
-
-    if (d.datePickedUp) {
-      backgroundColor = "#4caf50";
-    }
-
-    return {
-      backgroundColor,
-    };
-  };
-
   return (
-    <List {...props}>
-      <Datagrid rowClick="show" rowStyle={postRowStyle}>
+    <List {...props} bulkActionButtons={false}>
+      <Datagrid rowClick="show" rowStyle={getDumpsterColor}>
         <TextField source="location" />
         <DateField source="dateDropOff" />
         <DateField source="datePickedUp" />
@@ -154,21 +124,77 @@ const AddressAutoComplete = () => {
   );
 };
 
-export const DumpsterShow = (props: any) => (
-  <Show title={<DumpsterTitle />} actions={<DumpsterActions />} {...props}>
-    <SimpleShowLayout>
-      <TextField source="id" />
-      <TextField source="location" />
-      <TextField source="comments" />
-      <DateField source="createdAt" showTime />
-      <DateField source="dateDropOff" showTime />
-      <DateField source="datePickedUp" showTime />
-      <FunctionField<Dumpster>
-        label="Share"
-        render={(d?: Dumpster) => (
-          <a href={`/drop/${d?.id}`}>Link to drop page</a>
-        )}
-      />
-    </SimpleShowLayout>
-  </Show>
-);
+export const DumpsterShow = (props: any) => {
+  const history = useHistory();
+
+  const share = (d?: Dumpster) => {
+    if (navigator.share && d) {
+      navigator
+        .share({
+          title: d.location,
+          text: d.comments,
+          url: `/drop/${d?.id}`,
+        })
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing", error));
+    }
+  };
+  return (
+    <Show title={<DumpsterTitle />} actions={<DumpsterActions />} {...props}>
+      <SimpleShowLayout>
+        <TextField source="id" />
+        <TextField source="location" />
+        <TextField source="comments" />
+        <DateField source="createdAt" showTime />
+        <DateField source="dateDropOff" showTime />
+        <DateField source="datePickedUp" showTime />
+        <FunctionField<Dumpster>
+          label="Links"
+          render={(d?: Dumpster) => (
+            <>
+              <a href={`/drop/${d?.id}`}>Link to drop page</a>
+              <Button
+                color="secondary"
+                children={<ShareIcon />}
+                onClick={() => share(d)}
+                label="Share"
+              />
+            </>
+          )}
+        />
+      </SimpleShowLayout>
+    </Show>
+  );
+};
+
+export const getDumpsterColor = (d: Record) => {
+  let backgroundColor = "white";
+
+  if (!d.dateDropOff) {
+    return {
+      backgroundColor,
+    };
+  }
+  const today = new Date();
+
+  if (
+    new Date(d.dateDropOff) <
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 25)
+  ) {
+    backgroundColor = "#AFA74CFF";
+  }
+  if (
+    new Date(d.dateDropOff) <
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30)
+  ) {
+    backgroundColor = "#af4c4c";
+  }
+
+  if (d.datePickedUp) {
+    backgroundColor = "#4caf50";
+  }
+
+  return {
+    backgroundColor,
+  };
+};

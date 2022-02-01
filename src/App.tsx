@@ -1,7 +1,7 @@
 import React from "react";
 import { Resource, Admin } from "react-admin";
 import { buildAuthProvider, buildDataProvider } from "react-admin-amplify";
-
+import { createBrowserHistory as createHistory } from "history";
 import { GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
 
 import * as mutations from "./graphql/mutations";
@@ -15,9 +15,16 @@ import {
   DumpsterIcon,
 } from "./models/dumpster";
 
-function App() {
+import { customRoutes, Menu } from "./pages/menu";
+
+const history = createHistory();
+
+export default function App() {
   return (
     <Admin
+      menu={Menu}
+      history={history}
+      customRoutes={customRoutes}
       authProvider={buildAuthProvider({ authGroups: ["admin"] })}
       dataProvider={buildDataProvider(
         { queries, mutations },
@@ -35,5 +42,3 @@ function App() {
     </Admin>
   );
 }
-
-export default App;
