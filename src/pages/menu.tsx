@@ -5,8 +5,10 @@ import { useMediaQuery } from "@material-ui/core";
 import { MenuItemLink, getResources, RouteWithoutLayout } from "react-admin";
 import { withRouter, Route } from "react-router-dom";
 import TodayIcon from "@material-ui/icons/Today";
+import MapIcon from "@material-ui/icons/Map";
 import { Calendar } from "./calendar";
 import Drop from "../Drop";
+import { Map } from "./map";
 
 export const Menu = withRouter(({ onMenuClick, logout }: any) => {
   // @ts-ignore
@@ -35,6 +37,13 @@ export const Menu = withRouter(({ onMenuClick, logout }: any) => {
         onClick={onMenuClick}
         sidebarIsOpen={open}
       />
+      <MenuItemLink
+        to="/map"
+        primaryText="Map"
+        leftIcon={<MapIcon />}
+        onClick={onMenuClick}
+        sidebarIsOpen={open}
+      />
       {isXSmall && logout}
     </div>
   );
@@ -42,5 +51,6 @@ export const Menu = withRouter(({ onMenuClick, logout }: any) => {
 
 export const customRoutes = [
   <Route exact path="/calendar" component={Calendar} />,
+  <Route exact path="/map" component={Map} />,
   <RouteWithoutLayout exact path="/drop/:id" noLayout component={Drop} />,
 ];

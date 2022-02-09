@@ -104,7 +104,6 @@ function MyComponent() {
     //setLocation(e.latLng);
   };
 
-  console.log("dd", dumpster?.dateDropOff, dumpster?.datePickedUp);
   return isLoaded && dumpster ? (
     <div style={{ textAlign: "center" }}>
       {dumpster?.latLng && (
