@@ -8,13 +8,20 @@ import { Dumpster } from "../models";
 
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import CachedIcon from "@material-ui/icons/Cached";
-import { PostFilterForm } from "./mapFilters";
+import { PostFilterForm, MapFilters } from "./mapFilters";
+import { Box } from "@material-ui/core";
+import {
+  datesAreOnSameDay,
+  datesInSameWeek,
+  datesAreIn30Days,
+} from "../models/dumpster";
 
 export const Map = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
 
   const [dumpsters, setDumpsters] = useState<Dumpster[]>([]);
+  const [filters, setFilters] = useState<MapFilters>();
 
   useEffect(() => {
     DataStore.query(Dumpster).then((d) => setDumpsters(d));
@@ -45,13 +52,85 @@ export const Map = () => {
     }
   }, [bounds, dumpsters, map]);
 
+  let filteredDumpsters = dumpsters;
+  if (filters) {
+    filteredDumpsters = dumpsters.filter((d) => {
+      if (filters.type === "dropped" && !d.dateDropOff) {
+        return false;
+      }
+      if (filters.type === "picked_up" && !d.datePickedUp) {
+        return false;
+      }
+
+      if (filters.on === "today") {
+        if (
+          (d.datePickedUp &&
+            datesAreOnSameDay(new Date(), new Date(d.datePickedUp))) ||
+          (d.dateDropOff &&
+            datesAreOnSameDay(new Date(), new Date(d.dateDropOff)))
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (filters.on === "week") {
+        if (
+          (d.datePickedUp &&
+            datesInSameWeek(new Date(), new Date(d.datePickedUp))) ||
+          (d.dateDropOff &&
+            datesInSameWeek(new Date(), new Date(d.dateDropOff)))
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (filters.on === "month") {
+        if (
+          (d.datePickedUp &&
+            datesAreIn30Days(new Date(), new Date(d.datePickedUp))) ||
+          (d.dateDropOff &&
+            datesAreIn30Days(new Date(), new Date(d.dateDropOff)))
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (filters.at) {
+        if (
+          (d.datePickedUp &&
+            datesAreOnSameDay(
+              new Date(`${filters.at} 00:00:00`),
+              new Date(d.datePickedUp)
+            )) ||
+          (d.dateDropOff &&
+            datesAreOnSameDay(
+              new Date(`${filters.at} 00:00:00`),
+              new Date(d.dateDropOff)
+            ))
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
   return (
     <Card>
-      <Title title="Calendar" />
+      <Title title="Map" />
       <CardContent>
         {isLoaded ? (
           <div style={{ textAlign: "center" }}>
-            <PostFilterForm />
+            <PostFilterForm setFilters={setFilters} />
             <GoogleMap
               mapContainerStyle={{
                 width: "100%",
@@ -63,15 +142,24 @@ export const Map = () => {
               onLoad={onLoad}
               onUnmount={onUnmount}
             >
-              {dumpsters.map((dumpster) => (
-                <Marker position={dumpster!.latLng as any} draggable={false} />
+              {filteredDumpsters.map((dumpster) => (
+                <Marker
+                  position={dumpster!.latLng as any}
+                  draggable={false}
+                  onClick={() =>
+                    window.open(
+                      `${window.location.origin}/Dumpsters/${dumpster.id}/show`,
+                      "_blank"
+                    )
+                  }
+                />
               ))}
             </GoogleMap>
           </div>
         ) : (
-          <>
+          <Box textAlign="center">
             <CachedIcon />
-          </>
+          </Box>
         )}
       </CardContent>
     </Card>

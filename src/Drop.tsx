@@ -7,6 +7,7 @@ import { Dumpster } from "./models";
 import { useParams } from "react-router-dom";
 import { Hub } from "@aws-amplify/core";
 import CachedIcon from "@material-ui/icons/Cached";
+import { Box } from "@material-ui/core";
 
 const containerStyle = {
   width: "100%",
@@ -155,9 +156,9 @@ function MyComponent() {
       </form>
     </div>
   ) : (
-    <>
+    <Box textAlign="center">
       <CachedIcon />
-    </>
+    </Box>
   );
 }
 

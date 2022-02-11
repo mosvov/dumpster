@@ -1,25 +1,22 @@
 import * as React from "react";
 import { Form } from "react-final-form";
-import { Box, Button, InputAdornment } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import { TextInput, NullableBooleanInput } from "react-admin";
+import { Box, Button } from "@material-ui/core";
+import { DateInput, SelectInput } from "react-admin";
 
-export const PostFilterForm = () => {
-  const onSubmit = (values: any) => {
-    if (Object.keys(values).length > 0) {
-      // setFilters(values);
-    } else {
-      //hideFilter("main");
-    }
-  };
+export interface MapFilters {
+  type?: string;
+  on?: string;
+  at?: string;
+}
 
-  const resetFilter = () => {
-    //setFilters({}, []);
-  };
-
+export const PostFilterForm = ({
+  setFilters,
+}: {
+  setFilters: (filters?: MapFilters) => void;
+}) => {
   return (
-    <Form onSubmit={onSubmit} initialValues={{}}>
-      {({ handleSubmit }) => (
+    <Form onSubmit={setFilters} initialValues={{}}>
+      {({ handleSubmit, form }) => (
         <form onSubmit={handleSubmit}>
           <Box
             display="flex"
@@ -28,31 +25,45 @@ export const PostFilterForm = () => {
             mb={1}
           >
             <Box component="span" mr={2}>
-              {/* Full-text search filter. We don't use <SearchFilter> to force a large form input */}
-              <TextInput
-                resettable
-                helperText={false}
-                source="q"
-                label="Search"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon color="disabled" />
-                    </InputAdornment>
-                  ),
-                }}
+              <SelectInput
+                source="type"
+                choices={[
+                  { id: "all", name: "All" },
+                  { id: "dropped", name: "Dropped" },
+                  { id: "picked_up", name: "Picked up" },
+                ]}
               />
             </Box>
             <Box component="span" mr={2}>
-              <NullableBooleanInput helperText={false} source="commentable" />
+              <SelectInput
+                source="on"
+                choices={[
+                  { id: "today", name: "Today" },
+                  { id: "week", name: "This week" },
+                  { id: "month", name: "Last 30 days" },
+                ]}
+              />
             </Box>
-            <Box component="span" mr={2} mb={1.5}>
+            <Box component="span" mr={2} mb={4}>
+              OR
+            </Box>
+            <Box component="span" mr={2}>
+              <DateInput source="at" />
+            </Box>
+
+            <Box component="span" mr={2} mb={4}>
               <Button variant="outlined" color="primary" type="submit">
                 Filter
               </Button>
             </Box>
-            <Box component="span" mb={1.5}>
-              <Button variant="outlined" onClick={resetFilter}>
+            <Box component="span" mb={4}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  form.reset();
+                  setFilters(undefined);
+                }}
+              >
                 Reset
               </Button>
             </Box>
